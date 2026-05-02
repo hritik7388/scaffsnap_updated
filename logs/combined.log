@@ -305,3 +305,12 @@
 2026-05-02 22:59:07 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/register[39m
 2026-05-02 22:59:08 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/register - status: 201 - 177.72ms[39m
 2026-05-02 23:15:15 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-02 23:15:24 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-02 23:15:24 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-02 23:15:25 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-02 23:15:40 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
+2026-05-02 23:15:40 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 200 - 221.43ms[39m
+2026-05-02 23:16:33 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
+2026-05-02 23:16:33 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 401 - 480.34ms[39m
+2026-05-02 23:16:48 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
+2026-05-02 23:16:48 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 200 - 142.75ms[39m
