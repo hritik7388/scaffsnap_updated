@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "@packages/*": ["packages/*"]
+    },
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true
+  }
+}

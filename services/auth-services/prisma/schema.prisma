@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AuthCredentials {
+  id BigInt @id @default(autoincrement())
+
+  userId    BigInt    @unique
+  email     String    @unique
+  password  String
+  lastLogin DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+}
+
+model AuthUser {
+  id   BigInt @id @default(autoincrement())
+  name String
+
+  mobileNumber String
+  countryCode  String @default("+91")
+  addressLine  String
+  latitude     Float
+  longitude    Float
+
+  userType String
+  status   String @default("ACTIVE")
+
+  isDeleted  Boolean @default(false)
+  isVerified Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  credentials AuthCredentials?
+  devices     AuthDevice[]
+   companyIdentity CompanyIdentity?
+}
+
+model AuthDevice {
+  id BigInt @id @default(autoincrement())
+
+  auth_userId BigInt
+  deviceToken String? // FCM / APNS token
+  deviceType  String? // e.g., "iOS", "Android"
+  deviceName  String?
+  
+
+  appVersion String?
+  osVersion  String?
+
+  lastLogin DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user AuthUser @relation(fields: [auth_userId], references: [id], onDelete: Cascade)
+
+  @@index([auth_userId])
+}
+
+
+model Notification {
+  id          BigInt   @id @default(autoincrement())
+  uuid        String   @unique
+
+  title       String
+  message     String
+
+  type        String   // e.g. "USER_REGISTERED", "PROJECT_CREATED"
+  role        String   // SUPERADMIN, SUBADMIN, PM, CP
+
+  receiverId  BigInt?
+  senderId    String?
+
+  isRead      Boolean  @default(false)
+
+  notificationImage       String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CompanyIdentity {
+  id BigInt @id @default(autoincrement())
+
+  authUserId BigInt @unique
+
+  companyId String @unique   // CMPID-456734
+  userType      String           // SUB_ADMIN / PROJECT_MANAGER / CP etc
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user AuthUser @relation(fields: [authUserId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([authUserId])
+}

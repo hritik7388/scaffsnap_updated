@@ -1,0 +1,55 @@
+2026-05-02 14:54:08 [[31merror[39m] : [31mCan't reach database server at `127.0.0.1:3306`[39m
+
+[31mPlease make sure your database server is running at `127.0.0.1:3306`.[39m
+2026-05-02 14:59:00 [[31merror[39m] : [31mCan't reach database server at `127.0.0.1:3306`[39m
+
+[31mPlease make sure your database server is running at `127.0.0.1:3306`.[39m
+2026-05-02 15:21:00 [[31merror[39m] : [31mAuthentication failed against database server, the provided database credentials for `root` are not valid.[39m
+
+[31mPlease make sure to provide valid database credentials for the database server at the configured address.[39m
+2026-05-02 15:24:55 [[31merror[39m] : [31mAuthentication failed against database server, the provided database credentials for `root` are not valid.[39m
+
+[31mPlease make sure to provide valid database credentials for the database server at the configured address.[39m
+2026-05-02 15:28:33 [[31merror[39m] : [31mAuthentication failed against database server, the provided database credentials for `root` are not valid.[39m
+
+[31mPlease make sure to provide valid database credentials for the database server at the configured address.[39m
+2026-05-02 15:31:42 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:43 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:43 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:43 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:44 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:44 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:45 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:45 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:46 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:47 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:48 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:49 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:50 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:31:52 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6380[39m
+2026-05-02 15:32:49 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:32:49 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:32:50 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:32:50 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:32:50 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:32:51 [[31merror[39m] : [31mconnect ECONNREFUSED 127.0.0.1:6379[39m
+2026-05-02 15:44:34 [[31merror[39m] : [31mSuperAdmin email is required[39m
+2026-05-02 15:49:07 [[31merror[39m] : [31mSuperAdmin email is required[39m
+2026-05-02 18:53:20 [[31merror[39m] : [31m[39m
+[31mInvalid `prisma.authUser.create()` invocation in[39m
+[31mC:\Users\Hriti\scaffsnap_updated\services\auth-services\src\init\default.superAdmin.ts:24:38[39m
+
+[31m  21 const tempPass = crypto.randomBytes(6).toString("hex");[39m
+[31m  22 const hashedPassword = await bcrypt.hash(tempPass, 12);[39m
+[31m  23 [39m
+[31m→ 24 const user = await prisma.authUser.create([39m
+[31mUnique constraint failed on the constraint: `AuthCredentials_email_key`[39m
+2026-05-02 18:54:10 [[31merror[39m] : [31m[39m
+[31mInvalid `prisma.authUser.create()` invocation in[39m
+[31mC:\Users\Hriti\scaffsnap_updated\services\auth-services\src\init\default.superAdmin.ts:24:38[39m
+
+[31m  21 const tempPass = crypto.randomBytes(6).toString("hex");[39m
+[31m  22 const hashedPassword = await bcrypt.hash(tempPass, 12);[39m
+[31m  23 [39m
+[31m→ 24 const user = await prisma.authUser.create([39m
+[31mUnique constraint failed on the constraint: `AuthCredentials_email_key`[39m

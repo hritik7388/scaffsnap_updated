@@ -1,0 +1,5 @@
+export const JobTypes = {
+  SEND_EMAIL: "SEND_EMAIL",
+  SEND_OTP: "SEND_OTP",
+  PUSH_NOTIFICATION: "PUSH_NOTIFICATION",
+};
