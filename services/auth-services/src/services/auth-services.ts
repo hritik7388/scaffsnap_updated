@@ -1,17 +1,15 @@
 import bcrypt from "bcryptjs";
 import { AuthCredentialsRepository } from "../repository/auth-credentials";
 import { AuthDeviceRepository } from "../repository/auth-device";
-import { AuthUserRepository } from "../repository/auth-user";
+import { AuthUserRepository } from "../repository/auth-user"; 
 import { LoginDTO, RegisterSubAdminDTO } from "../schema/auth-schema";
 import { JobTypes } from "@packages/queue/jobs";
 import { AppQueue } from "@packages/queue/queue";
 import { generateCompanyId } from "@packages/utils/utils";
 import prisma from "../config/prismaClient";
 import { createError } from "../utils";
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt, { SignOptions } from "jsonwebtoken";
 import { config } from "../config/config";
-import { id } from "zod/v4/locales";
-import { token } from "morgan";
 
 export const User = {
     SUPER_ADMIN: "SUPER ADMIN",
@@ -19,23 +17,22 @@ export const User = {
     TRADESMAN: "TRADESMAN",
     PROJECT_MANAGER: "PROJECT MANAGER",
     COMPETENT_PERSON: "COMPETENT PERSON",
-}
-
-
+};
 
 export class AuthService {
 
     userRepository: AuthUserRepository;
     credentialRepository: AuthCredentialsRepository;
-    deviceRepository: AuthDeviceRepository;
-
-
+    deviceRepository: AuthDeviceRepository; 
     constructor() {
         this.userRepository = new AuthUserRepository();
         this.credentialRepository = new AuthCredentialsRepository();
-        this.deviceRepository = new AuthDeviceRepository();
+        this.deviceRepository = new AuthDeviceRepository(); 
     }
 
+    // -----------------------------
+    // REGISTER
+    // -----------------------------
     async register(data: RegisterSubAdminDTO) {
 
         const existing = await this.credentialRepository.findByEmail(data.email);
@@ -58,8 +55,8 @@ export class AuthService {
             isVerified: true
         });
 
-        // 2. CREATE PASSWORD
-        const hashedPassword = bcrypt.hashSync(data.password, 10);
+        // 2. PASSWORD
+        const hashedPassword = await bcrypt.hash(data.password, 10);
 
         await this.credentialRepository.create({
             userId: user.id,
@@ -83,48 +80,41 @@ export class AuthService {
             });
         }
 
-        // 4. COMPANY ID ONLY FOR SUB_ADMIN
+        // 4. COMPANY (SUB ADMIN)
         let companyId: string | null = null;
 
         if (data.userType === User.SUB_ADMIN) {
             const cmpId = generateCompanyId();
 
-            await prisma.companyIdentity.create({
-                data: {
-                    authUserId: user.id,
-                    companyId: cmpId,
-                    userType: User.SUB_ADMIN
-                }
+            await this.userRepository.create({
+                authUserId: user.id,
+                companyId: cmpId,
+                userType: User.SUB_ADMIN
             });
 
             companyId = cmpId;
         }
 
-        // 5. RESPONSE BUILDER (ROLE BASED)
-        const response: any = {
-            id: Number(user.id),
-            name: user.name,
-            email: data.email,
-            mobileNumber: user.mobileNumber,
-            countryCode: user.countryCode,
-            addressLine: user.addressLine,
-            latitude: user.latitude,
-            longitude: user.longitude,
-            userType: user.userType
-        };
-
-        // 🔥 ONLY SUB ADMIN GETS CMP ID
-        if (data.userType === User.SUB_ADMIN) {
-            response.cmpId = companyId;
-        }
-
         return {
             message: "User registered successfully",
-            data: response
+            data: {
+                id: Number(user.id),
+                name: user.name,
+                email: data.email,
+                mobileNumber: user.mobileNumber,
+                countryCode: user.countryCode,
+                addressLine: user.addressLine,
+                latitude: user.latitude,
+                longitude: user.longitude,
+                userType: user.userType,
+                ...(data.userType === User.SUB_ADMIN && { cmpId: companyId })
+            }
         };
     }
 
-
+    // -----------------------------
+    // LOGIN
+    // -----------------------------
     async login(data: LoginDTO) {
 
         const userCred = await this.credentialRepository.findByEmail(data.email);
@@ -139,83 +129,52 @@ export class AuthService {
             throw createError("Invalid email or password", 401);
         }
 
-        const user = await prisma.authUser.findFirst({
-            where: {
-                id: userCred.userId,
-                isDeleted: false,
-                isVerified: true,
-                status: "ACTIVE"
-            }
-        });
+        const user = await this.userRepository.findById(userCred.userId);
 
-        if (!user) {
+        if (!user || user.isDeleted || !user.isVerified || user.status !== "ACTIVE") {
             throw createError("User not active or not found", 403);
         }
 
-        // 🔵 CMPID (ONLY PM / CP)
+        // COMPANY
         let company = null;
 
         if (
             user.userType === User.PROJECT_MANAGER ||
             user.userType === User.COMPETENT_PERSON
         ) {
-            company = await prisma.companyIdentity.findUnique({
-                where: { authUserId: user.id }
-            });
+            company = await this.userRepository.findByUserId(user.id);
         }
+
+        // DEVICE
         if (data.deviceToken) {
-            const existingDevice = await prisma.authDevice.findFirst({
-                where: {
-                    auth_userId: user.id,
-                    deviceToken: data.deviceToken
-                }
-            });
+            const existingDevice = await this.deviceRepository.findExistingDevice(user.id, data.deviceToken);
 
             if (existingDevice) {
-                // 🔄 UPDATE SAME USER + SAME DEVICE
-                await prisma.authDevice.update({
-                    where: { id: existingDevice.id },
-                    data: {
-                        deviceType: data.deviceType,
-                        deviceName: data.deviceName,
-                        appVersion: data.appVersion,
-                        osVersion: data.osVersion,
-                        user_type: user.userType,
-                        isActive: true,
-                        lastLogin: new Date()
-                    }
+                await this.deviceRepository.update(existingDevice.id, {
+                    deviceType: data.deviceType,
+                    deviceName: data.deviceName,
+                    appVersion: data.appVersion,
+                    osVersion: data.osVersion,
+                    user_type: user.userType,
+                    isActive: true,
+                    lastLogin: new Date()
                 });
             } else {
-                // 🆕 CREATE NEW DEVICE ENTRY
-                await prisma.authDevice.create({
-                    data: {
-                        auth_userId: user.id,
-                        user_type: user.userType,
-                        deviceToken: data.deviceToken,
-                        deviceType: data.deviceType,
-                        deviceName: data.deviceName,
-                        appVersion: data.appVersion,
-                        osVersion: data.osVersion,
-                        isActive: true,
-                        lastLogin: new Date()
-                    }
+                await this.deviceRepository.create({
+                    auth_userId: user.id,
+                    user_type: user.userType,
+                    deviceToken: data.deviceToken,
+                    deviceType: data.deviceType,
+                    deviceName: data.deviceName,
+                    appVersion: data.appVersion,
+                    osVersion: data.osVersion,
+                    isActive: true,
+                    lastLogin: new Date()
                 });
             }
         }
 
-
-        // 🟢 PROJECT ID (ONLY TRADESMAN)
-        // let projectId = null;
-
-        // if (user.userType === User.TRADESMAN) {
-        //     const assigned = await prisma.projectMember.findFirst({
-        //         where: { userId: user.id }
-        //     });
-
-        //     projectId = assigned?.projectId || null;
-        // }
-
-        // 🔐 JWT
+        // JWT
         const payload: any = {
             sub: String(user.id),
             email: userCred.email,
@@ -223,9 +182,6 @@ export class AuthService {
         };
 
         if (company) payload.cmpId = company.companyId;
-        // if (projectId) payload.projectId = projectId;
-
-
 
         const refreshToken = jwt.sign(
             {
@@ -237,35 +193,24 @@ export class AuthService {
             { expiresIn: config.JWT_REFRESH_EXPIRES_IN } as SignOptions
         );
 
-        await prisma.authCredentials.update({
-            where: { email: data.email },
-            data: { lastLogin: new Date() }
-        });
-
-        // 🚀 RESPONSE BUILDER (ROLE BASED)
-        const response: any = {
-            id: Number(user.id),
-            name: user.name,
-            email: userCred.email,
-            userType: user.userType,
-            refreshToken
-        };
-
-        // 🟡 PM / CP → CMPID
-        if (company) {
-            response.cmpId = company.companyId;
-        }
-
-        // 🟢 TRADESMAN → PROJECT ID
-        // if (projectId) {
-        //     response.projectId = projectId;
-        // }
+        await this.credentialRepository.updateLastLogin(data.email);
 
         return {
             message: "Login successful",
-            data: response
+            data: {
+                id: Number(user.id),
+                name: user.name,
+                email: userCred.email,
+                userType: user.userType,
+                refreshToken,
+                ...(company && { cmpId: company.companyId })
+            }
         };
     }
+
+    // -----------------------------
+    // LOGOUT
+    // -----------------------------
     async logout(userId: number, data: { deviceToken: string }) {
 
         if (!data.deviceToken) {
@@ -274,47 +219,16 @@ export class AuthService {
 
         const uid = BigInt(userId);
 
-        // 🔍 Find active device
-        const activeDevice = await prisma.authDevice.findFirst({
-            where: {
-                auth_userId: uid,
-                deviceToken: data.deviceToken,
-                isActive: true
-            }
-        });
+        const activeDevice = await this.deviceRepository.findActiveDevice(uid, data.deviceToken);
 
-        // 🟡 Already logged out case
         if (!activeDevice) {
-
-            const alreadyLoggedOut = await prisma.authDevice.findFirst({
-                where: {
-                    auth_userId: uid,
-                    deviceToken: null,
-                    isActive: false
-                }
-            });
-
-            if (alreadyLoggedOut) {
-                return {
-                    message: "Already logged out",
-                    data: null
-                };
-            }
-
-            throw createError("Device not found", 404);
+            return {
+                message: "Already logged out or device not found",
+                data: null
+            };
         }
 
-        // 🔥 Logout device
-        await prisma.authDevice.update({
-            where: {
-                id: activeDevice.id
-            },
-            data: {
-                deviceToken: null,
-                isActive: false,
-                lastLogin: new Date()
-            }
-        });
+        await this.deviceRepository.logoutDevice(activeDevice.id);
 
         return {
             message: "Logout successful",

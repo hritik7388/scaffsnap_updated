@@ -13,13 +13,7 @@ export class AuthController {
         try {
             const result = await this.authService.register(req.body);
 
-            if (!result) {
-                return res.status(500).json({
-                    success: false,
-                    statusCode: 500,
-                    message: "Registration failed"
-                });
-            }
+
             return res.status(201).json({
                 statusCode: 201,
                 message: result.message,
@@ -52,34 +46,26 @@ export class AuthController {
             });
         }
     }
- async logout(req: Request, res: Response) {
-    try {
-      const userId = Number(req.userId);
-        console.log("userId=============",userId)
-        const { deviceToken } = req.body;
+    async logout(req: Request, res: Response) {
+        try {
+            const userId = Number(req.userId);
+            const { deviceToken } = req.body;
 
-        if (!userId) {
-            return res.status(401).json({ message: "Unauthorized" });
+
+            const result = await this.authService.logout(userId, { deviceToken });
+
+            return res.status(200).json({
+                statusCode: 200,
+                message: result.message,
+                data: result.data
+            });
+
+        } catch (error: any) {
+            return res.status(error.statusCode || 500).json({
+                message: error.message || "Internal Server Error"
+            });
         }
-
-        if (!deviceToken) {
-            return res.status(400).json({ message: "deviceToken is required" });
-        }
-
-        const result = await this.authService.logout(userId, { deviceToken });
-
-        return res.status(200).json({
-            statusCode: 200,
-            message: result.message,
-            data: result.data
-        });
-
-    } catch (error: any) {
-        return res.status(error.statusCode || 500).json({
-            message: error.message || "Internal Server Error"
-        });
     }
-}
 
 
 
