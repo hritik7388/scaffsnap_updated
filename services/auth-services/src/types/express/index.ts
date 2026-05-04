@@ -1,3 +1,4 @@
+//services/auth-services/ src/types/express
 import * as express from 'express';
 
 declare global {

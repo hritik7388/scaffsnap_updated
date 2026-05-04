@@ -163,6 +163,46 @@ export class AuthService {
             where: { authUserId: user.id }
         });
     }
+    if (data.deviceToken) {
+        const existingDevice = await prisma.authDevice.findFirst({
+            where: {
+                auth_userId: user.id,
+                deviceToken: data.deviceToken
+            }
+        });
+
+        if (existingDevice) {
+            // 🔄 UPDATE SAME USER + SAME DEVICE
+            await prisma.authDevice.update({
+                where: { id: existingDevice.id },
+                data: {
+                    deviceType: data.deviceType,
+                    deviceName: data.deviceName,
+                    appVersion: data.appVersion,
+                    osVersion: data.osVersion,
+                    user_type: user.userType,
+                    isActive: true,
+                    lastLogin: new Date()
+                }
+            });
+        } else {
+            // 🆕 CREATE NEW DEVICE ENTRY
+            await prisma.authDevice.create({
+                data: {
+                    auth_userId: user.id,
+                    user_type: user.userType,
+                    deviceToken: data.deviceToken,
+                    deviceType: data.deviceType,
+                    deviceName: data.deviceName,
+                    appVersion: data.appVersion,
+                    osVersion: data.osVersion,
+                    isActive: true,
+                    lastLogin: new Date()
+                }
+            });
+        }
+    }
+
 
     // 🟢 PROJECT ID (ONLY TRADESMAN)
     // let projectId = null;
@@ -226,4 +266,5 @@ export class AuthService {
         data: response
     };
 }
+
 }

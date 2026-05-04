@@ -27,11 +27,13 @@ model AuthUser {
   id   BigInt @id @default(autoincrement())
   name String
 
-  mobileNumber String
-  countryCode  String @default("+91")
-  addressLine  String
-  latitude     Float
-  longitude    Float
+  mobileNumber  String
+  countryCode   String    @default("+91")
+  addressLine   String
+  latitude      Float
+  longitude     Float
+  otp           String?
+  otpExpireTime DateTime?
 
   userType String
   status   String @default("ACTIVE")
@@ -42,23 +44,23 @@ model AuthUser {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  credentials AuthCredentials?
-  devices     AuthDevice[]
-   companyIdentity CompanyIdentity?
+  credentials     AuthCredentials?
+  devices         AuthDevice[]
+  companyIdentity CompanyIdentity?
 }
 
 model AuthDevice {
   id BigInt @id @default(autoincrement())
 
   auth_userId BigInt
-  deviceToken String? // FCM / APNS token
+  user_type   String?
+  deviceToken String?    
   deviceType  String? // e.g., "iOS", "Android"
   deviceName  String?
-  
 
   appVersion String?
   osVersion  String?
-
+ isActive    Boolean @default(true)
   lastLogin DateTime?
 
   createdAt DateTime @default(now())
@@ -69,26 +71,25 @@ model AuthDevice {
   @@index([auth_userId])
 }
 
-
 model Notification {
-  id          BigInt   @id @default(autoincrement())
-  uuid        String   @unique
+  id   BigInt @id @default(autoincrement())
+  uuid String @unique
 
-  title       String
-  message     String
+  title   String
+  message String
 
-  type        String   // e.g. "USER_REGISTERED", "PROJECT_CREATED"
-  role        String   // SUPERADMIN, SUBADMIN, PM, CP
+  type String // e.g. "USER_REGISTERED", "PROJECT_CREATED"
+  role String // SUPERADMIN, SUBADMIN, PM, CP
 
-  receiverId  BigInt?
-  senderId    String?
+  receiverId BigInt?
+  senderId   String?
 
-  isRead      Boolean  @default(false)
+  isRead Boolean @default(false)
 
-  notificationImage       String?
+  notificationImage String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CompanyIdentity {
@@ -96,8 +97,8 @@ model CompanyIdentity {
 
   authUserId BigInt @unique
 
-  companyId String @unique   // CMPID-456734
-  userType      String           // SUB_ADMIN / PROJECT_MANAGER / CP etc
+  companyId String @unique // CMPID-456734
+  userType  String // SUB_ADMIN / PROJECT_MANAGER / CP etc
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -106,4 +107,13 @@ model CompanyIdentity {
 
   @@index([companyId])
   @@index([authUserId])
+}
+
+model Craft {
+  id         BigInt  @id @default(autoincrement())
+  name       String  @unique
+  craftImage String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

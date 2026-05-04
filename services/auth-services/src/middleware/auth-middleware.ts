@@ -20,38 +20,37 @@ const publicRoutes = new Set([
 ].map(route => route.toLowerCase()));
 
 
-export const verifyToken = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+
     if (publicRoutes.has(req.path.toLowerCase())) {
         return next();
     }
 
     try {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader) {
-            return res.status(403).json({ message: 'Authorization header missing' });
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(403).json({ message: "Authorization header missing" });
         }
 
-        const token = authHeader.split(' ')[1];
-        if (!token) return res.status(403).json({ message: 'Token missing' });
+        const token = authHeader.split(" ")[1];
+
         const decoded: any = jwt.verify(token, config.JWT_REFRESH_SECRET);
-        const redisKey = `auth:${decoded.id}:${token}`;
-        // const redisToken = await redisClient.get(redisKey);
-        // if (!redisToken) return res.status(401).json({ message: 'Unauthorized' });
-        req.userId = decoded.sub;
+
+        if (!decoded?.sub) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
+
+        req.userId = Number(decoded.sub);
         req.userRole = decoded.role;
         req.token = token;
 
         next();
-    } catch (error: any) {
-        console.log(`Exception while doing something: ${error}`);
-        return res.status(401).json({ message: 'Unauthorized' });
+
+    } catch (error) {
+        console.log("Auth middleware error:", error);
+        return res.status(401).json({ message: "Unauthorized" });
     }
-
-
 };
 
 export const requireSubAdmin = (req: Request, res: Response, next: NextFunction) => {

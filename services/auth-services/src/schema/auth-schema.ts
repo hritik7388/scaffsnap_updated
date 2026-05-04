@@ -35,10 +35,17 @@ export const loginSchema = z.object({
         "TRADESMAN"
     ]),
 
-    // 🔥 OPTIONAL CONTEXT FIELDS
     cmpId: z.string().optional(),
     projectId: z.string().optional(),
-}); 
+    craft: z.string().optional(),
+
+    // 📱 DEVICE FIELDS (ADDED)
+    deviceToken: z.string().optional(),
+    deviceType: z.string().optional(),
+    deviceName: z.string().optional(),
+    appVersion: z.string().optional(),
+    osVersion: z.string().optional(),
+});
 
 export type RegisterSubAdminDTO = z.infer<typeof registerSubAdminSchema>;
 export type LoginDTO = z.infer<typeof loginSchema>;
