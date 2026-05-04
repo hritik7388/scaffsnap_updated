@@ -2,13 +2,28 @@
   "compilerOptions": {
     "target": "ES2024",
     "module": "commonjs",
+    "moduleResolution": "node",
+
     "baseUrl": ".",
     "paths": {
       "@packages/*": ["packages/*"]
     },
+
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+
+    "outDir": "dist",
+    "rootDir": ".",
+
+    "typeRoots": ["./node_modules/@types", "./types"]
+  },
+
+  "include": [
+    "services/**/*",
+    "packages/**/*",
+    "types/**/*.d.ts"
+  ],
+
+  "exclude": ["node_modules", "dist"]
 }

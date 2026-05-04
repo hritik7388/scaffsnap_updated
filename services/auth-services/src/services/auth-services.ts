@@ -125,146 +125,200 @@ export class AuthService {
     }
 
 
-  async login(data: LoginDTO) {
+    async login(data: LoginDTO) {
 
-    const userCred = await this.credentialRepository.findByEmail(data.email);
+        const userCred = await this.credentialRepository.findByEmail(data.email);
 
-    if (!userCred) {
-        throw createError("Invalid email or password", 401);
-    }
-
-    const isValid = await bcrypt.compare(data.password, userCred.password);
-
-    if (!isValid) {
-        throw createError("Invalid email or password", 401);
-    }
-
-    const user = await prisma.authUser.findFirst({
-        where: {
-            id: userCred.userId,
-            isDeleted: false,
-            isVerified: true,
-            status: "ACTIVE"
+        if (!userCred) {
+            throw createError("Invalid email or password", 401);
         }
-    });
 
-    if (!user) {
-        throw createError("User not active or not found", 403);
-    }
+        const isValid = await bcrypt.compare(data.password, userCred.password);
 
-    // 🔵 CMPID (ONLY PM / CP)
-    let company = null;
+        if (!isValid) {
+            throw createError("Invalid email or password", 401);
+        }
 
-    if (
-        user.userType === User.PROJECT_MANAGER ||
-        user.userType === User.COMPETENT_PERSON
-    ) {
-        company = await prisma.companyIdentity.findUnique({
-            where: { authUserId: user.id }
-        });
-    }
-    if (data.deviceToken) {
-        const existingDevice = await prisma.authDevice.findFirst({
+        const user = await prisma.authUser.findFirst({
             where: {
-                auth_userId: user.id,
-                deviceToken: data.deviceToken
+                id: userCred.userId,
+                isDeleted: false,
+                isVerified: true,
+                status: "ACTIVE"
             }
         });
 
-        if (existingDevice) {
-            // 🔄 UPDATE SAME USER + SAME DEVICE
-            await prisma.authDevice.update({
-                where: { id: existingDevice.id },
-                data: {
-                    deviceType: data.deviceType,
-                    deviceName: data.deviceName,
-                    appVersion: data.appVersion,
-                    osVersion: data.osVersion,
-                    user_type: user.userType,
-                    isActive: true,
-                    lastLogin: new Date()
-                }
-            });
-        } else {
-            // 🆕 CREATE NEW DEVICE ENTRY
-            await prisma.authDevice.create({
-                data: {
-                    auth_userId: user.id,
-                    user_type: user.userType,
-                    deviceToken: data.deviceToken,
-                    deviceType: data.deviceType,
-                    deviceName: data.deviceName,
-                    appVersion: data.appVersion,
-                    osVersion: data.osVersion,
-                    isActive: true,
-                    lastLogin: new Date()
-                }
+        if (!user) {
+            throw createError("User not active or not found", 403);
+        }
+
+        // 🔵 CMPID (ONLY PM / CP)
+        let company = null;
+
+        if (
+            user.userType === User.PROJECT_MANAGER ||
+            user.userType === User.COMPETENT_PERSON
+        ) {
+            company = await prisma.companyIdentity.findUnique({
+                where: { authUserId: user.id }
             });
         }
-    }
+        if (data.deviceToken) {
+            const existingDevice = await prisma.authDevice.findFirst({
+                where: {
+                    auth_userId: user.id,
+                    deviceToken: data.deviceToken
+                }
+            });
+
+            if (existingDevice) {
+                // 🔄 UPDATE SAME USER + SAME DEVICE
+                await prisma.authDevice.update({
+                    where: { id: existingDevice.id },
+                    data: {
+                        deviceType: data.deviceType,
+                        deviceName: data.deviceName,
+                        appVersion: data.appVersion,
+                        osVersion: data.osVersion,
+                        user_type: user.userType,
+                        isActive: true,
+                        lastLogin: new Date()
+                    }
+                });
+            } else {
+                // 🆕 CREATE NEW DEVICE ENTRY
+                await prisma.authDevice.create({
+                    data: {
+                        auth_userId: user.id,
+                        user_type: user.userType,
+                        deviceToken: data.deviceToken,
+                        deviceType: data.deviceType,
+                        deviceName: data.deviceName,
+                        appVersion: data.appVersion,
+                        osVersion: data.osVersion,
+                        isActive: true,
+                        lastLogin: new Date()
+                    }
+                });
+            }
+        }
 
 
-    // 🟢 PROJECT ID (ONLY TRADESMAN)
-    // let projectId = null;
+        // 🟢 PROJECT ID (ONLY TRADESMAN)
+        // let projectId = null;
 
-    // if (user.userType === User.TRADESMAN) {
-    //     const assigned = await prisma.projectMember.findFirst({
-    //         where: { userId: user.id }
-    //     });
+        // if (user.userType === User.TRADESMAN) {
+        //     const assigned = await prisma.projectMember.findFirst({
+        //         where: { userId: user.id }
+        //     });
 
-    //     projectId = assigned?.projectId || null;
-    // }
+        //     projectId = assigned?.projectId || null;
+        // }
 
-    // 🔐 JWT
-    const payload: any = {
-        sub: String(user.id),
-        email: userCred.email,
-        role: user.userType
-    };
-
-    if (company) payload.cmpId = company.companyId;
-    // if (projectId) payload.projectId = projectId;
-
-  
-
-    const refreshToken = jwt.sign(
-        {
+        // 🔐 JWT
+        const payload: any = {
             sub: String(user.id),
-            role: user.userType,
-            type: "refresh"
-        },
-        config.JWT_REFRESH_SECRET,
-        { expiresIn: config.JWT_REFRESH_EXPIRES_IN } as SignOptions
-    );
+            email: userCred.email,
+            role: user.userType
+        };
 
-    await prisma.authCredentials.update({
-        where: { email: data.email },
-        data: { lastLogin: new Date() }
-    });
+        if (company) payload.cmpId = company.companyId;
+        // if (projectId) payload.projectId = projectId;
 
-    // 🚀 RESPONSE BUILDER (ROLE BASED)
-    const response: any = {
-        id: Number(user.id),
-        name: user.name,
-        email: userCred.email,
-        userType: user.userType, 
-        refreshToken
-    };
 
-    // 🟡 PM / CP → CMPID
-    if (company) {
-        response.cmpId = company.companyId;
+
+        const refreshToken = jwt.sign(
+            {
+                sub: String(user.id),
+                role: user.userType,
+                type: "refresh"
+            },
+            config.JWT_REFRESH_SECRET,
+            { expiresIn: config.JWT_REFRESH_EXPIRES_IN } as SignOptions
+        );
+
+        await prisma.authCredentials.update({
+            where: { email: data.email },
+            data: { lastLogin: new Date() }
+        });
+
+        // 🚀 RESPONSE BUILDER (ROLE BASED)
+        const response: any = {
+            id: Number(user.id),
+            name: user.name,
+            email: userCred.email,
+            userType: user.userType,
+            refreshToken
+        };
+
+        // 🟡 PM / CP → CMPID
+        if (company) {
+            response.cmpId = company.companyId;
+        }
+
+        // 🟢 TRADESMAN → PROJECT ID
+        // if (projectId) {
+        //     response.projectId = projectId;
+        // }
+
+        return {
+            message: "Login successful",
+            data: response
+        };
     }
+    async logout(userId: number, data: { deviceToken: string }) {
 
-    // 🟢 TRADESMAN → PROJECT ID
-    // if (projectId) {
-    //     response.projectId = projectId;
-    // }
+        if (!data.deviceToken) {
+            throw createError("deviceToken is required", 400);
+        }
 
-    return {
-        message: "Login successful",
-        data: response
-    };
-}
+        const uid = BigInt(userId);
 
+        // 🔍 Find active device
+        const activeDevice = await prisma.authDevice.findFirst({
+            where: {
+                auth_userId: uid,
+                deviceToken: data.deviceToken,
+                isActive: true
+            }
+        });
+
+        // 🟡 Already logged out case
+        if (!activeDevice) {
+
+            const alreadyLoggedOut = await prisma.authDevice.findFirst({
+                where: {
+                    auth_userId: uid,
+                    deviceToken: null,
+                    isActive: false
+                }
+            });
+
+            if (alreadyLoggedOut) {
+                return {
+                    message: "Already logged out",
+                    data: null
+                };
+            }
+
+            throw createError("Device not found", 404);
+        }
+
+        // 🔥 Logout device
+        await prisma.authDevice.update({
+            where: {
+                id: activeDevice.id
+            },
+            data: {
+                deviceToken: null,
+                isActive: false,
+                lastLogin: new Date()
+            }
+        });
+
+        return {
+            message: "Logout successful",
+            data: data.deviceToken
+        };
+    }
 }

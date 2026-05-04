@@ -1,6 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { config } from '../config/config';
+
+
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { config } from "../config/config";
 
 export const User = {
     SUPER_ADMIN: "SUPER ADMIN",
@@ -8,25 +10,25 @@ export const User = {
     TRADESMAN: "TRADESMAN",
     PROJECT_MANAGER: "PROJECT MANAGER",
     COMPETENT_PERSON: "COMPETENT PERSON",
-}
+};
 
-
-// Use a Set for O(1) lookup
 const publicRoutes = new Set([
-    '/',
-    '/health',
-    '/api/v1/auth/register',
-    '/api/v1/auth/login',
-].map(route => route.toLowerCase()));
+    "/",
+    "/health",
+    "/api/v1/auth/register",
+    "/api/v1/auth/login",
+].map(r => r.toLowerCase()));
 
-
-export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-
-    if (publicRoutes.has(req.path.toLowerCase())) {
-        return next();
-    }
-
+export const verifyToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
+        if (publicRoutes.has(req.path.toLowerCase())) {
+            return next();
+        }
+
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -35,25 +37,27 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
 
         const token = authHeader.split(" ")[1];
 
+        // 🔥 IMPORTANT: use ACCESS secret (NOT refresh)
         const decoded: any = jwt.verify(token, config.JWT_REFRESH_SECRET);
 
-        if (!decoded?.sub) {
+        console.log("decoded ---------------", decoded);
+
+        if (!decoded) {
             return res.status(401).json({ message: "Invalid token" });
         }
 
-        req.userId = Number(decoded.sub);
+        req.userId = decoded.sub;
         req.userRole = decoded.role;
         req.token = token;
 
         next();
-
     } catch (error) {
         console.log("Auth middleware error:", error);
         return res.status(401).json({ message: "Unauthorized" });
     }
 };
 
-export const requireSubAdmin = (req: Request, res: Response, next: NextFunction) => {
-    if (req.userRole !== User.SUB_ADMIN) { return res.status(403).json({ message: 'Only SubAdmin can perform this action' }); } next();
+// export const requireSubAdmin = (req: Request, res: Response, next: NextFunction) => {
+//     if (req.userRole !== User.SUB_ADMIN) { return res.status(403).json({ message: 'Only SubAdmin can perform this action' }); } next();
 
-}
+// }

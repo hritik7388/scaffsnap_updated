@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "../controller/auth-controller";
+import { verifyToken } from "../middleware/auth-middleware";
 
 const router = Router();
 
@@ -15,6 +16,12 @@ router.post(
     "/login",
     controller.login.bind(controller)
 );
+
+router.post(
+    "/logout", verifyToken,
+    controller.logout.bind(controller)
+);
+
 
 
 export default router;

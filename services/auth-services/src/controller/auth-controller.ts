@@ -16,12 +16,11 @@ export class AuthController {
             if (!result) {
                 return res.status(500).json({
                     success: false,
-                    statusCode:500,
+                    statusCode: 500,
                     message: "Registration failed"
                 });
             }
             return res.status(201).json({
-                success: true,
                 statusCode: 201,
                 message: result.message,
                 data: this.serialize(result.data)
@@ -29,19 +28,17 @@ export class AuthController {
 
         } catch (error: any) {
             return res.status(error.statusCode || 500).json({
-                success: false,
                 message: error.message || "Internal Server Error"
             });
         }
     }
 
-       async login(req: Request, res: Response) {
+    async login(req: Request, res: Response) {
         try {
 
             const result = await this.authService.login(req.body);
 
             return res.status(200).json({
-                success: true,
                 statusCode: 200,
                 message: result.message,
                 data: this.serialize(result.data)
@@ -50,12 +47,41 @@ export class AuthController {
         } catch (error: any) {
 
             return res.status(error.statusCode || 500).json({
-                success: false,
                 statusCode: error.statusCode || 500,
                 message: error.message || "Internal Server Error"
             });
         }
     }
+ async logout(req: Request, res: Response) {
+    try {
+      const userId = Number(req.userId);
+        console.log("userId=============",userId)
+        const { deviceToken } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        if (!deviceToken) {
+            return res.status(400).json({ message: "deviceToken is required" });
+        }
+
+        const result = await this.authService.logout(userId, { deviceToken });
+
+        return res.status(200).json({
+            statusCode: 200,
+            message: result.message,
+            data: result.data
+        });
+
+    } catch (error: any) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Internal Server Error"
+        });
+    }
+}
+
+
 
     // 🔥 SAFE BIGINT FIX (LOCAL)
     private serialize(data: any) {
@@ -65,5 +91,4 @@ export class AuthController {
             )
         );
     }
-
 }

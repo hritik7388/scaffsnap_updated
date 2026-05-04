@@ -333,3 +333,117 @@
 2026-05-04 17:12:56 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 200 - 585.39ms[39m
 2026-05-04 17:17:00 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
 2026-05-04 17:17:00 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 200 - 465.52ms[39m
+2026-05-04 17:23:19 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 17:23:19 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 17:23:19 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 17:57:53 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 17:57:53 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 17:57:53 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 17:58:20 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:08:19 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:08:19 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:08:19 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:08:52 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:10:26 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:10:26 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:10:26 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:10:35 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:13:46 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:13:47 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:13:47 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:13:51 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:14:28 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:14:28 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:14:28 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:14:32 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:20:44 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:20:44 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:20:58 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:20:58 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:20:58 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:21:09 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:21:10 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 500 - 294.87ms[39m
+2026-05-04 18:22:26 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:22:26 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:22:26 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 18:22:38 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:22:38 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:22:38 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:22:42 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:22:42 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 500 - 264.97ms[39m
+2026-05-04 18:23:23 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
+2026-05-04 18:23:24 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 200 - 631.50ms[39m
+2026-05-04 18:23:48 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/login[39m
+2026-05-04 18:23:48 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/login - status: 500 - 27.98ms[39m
+2026-05-04 18:23:57 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:23:57 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 500 - 30.72ms[39m
+2026-05-04 18:24:36 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:24:36 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 500 - 14.18ms[39m
+2026-05-04 18:26:13 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:26:13 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:26:13 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 18:26:59 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:26:59 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:26:59 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:27:04 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:27:04 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 500 - 310.01ms[39m
+2026-05-04 18:29:02 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:29:02 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:29:14 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:29:14 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:29:14 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:29:21 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:29:21 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 45.33ms[39m
+2026-05-04 18:30:09 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:30:09 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 12.32ms[39m
+2026-05-04 18:31:31 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:31:31 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:31:44 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:31:45 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:31:45 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:31:47 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:31:47 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 48.14ms[39m
+2026-05-04 18:32:11 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:32:11 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:32:11 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 18:32:25 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:32:25 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:32:25 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:32:26 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:32:27 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 56.69ms[39m
+2026-05-04 18:33:28 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:33:28 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:33:43 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:33:43 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:33:44 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:33:46 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:33:46 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 42.49ms[39m
+2026-05-04 18:35:35 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:35:35 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:35:35 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 18:36:43 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:36:43 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:36:44 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:37:05 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:37:05 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 41.64ms[39m
+2026-05-04 18:37:29 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:37:29 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:37:43 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:37:43 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:37:43 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:37:48 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:37:48 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 51.31ms[39m
+2026-05-04 18:39:00 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:39:00 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:39:16 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:39:16 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:39:16 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:39:20 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:39:20 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 401 - 42.77ms[39m
+2026-05-04 18:41:40 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
+2026-05-04 18:41:40 [[32minfo[39m] : [32mHTTP server closed[39m
+2026-05-04 18:41:56 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 18:41:56 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 18:41:56 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 18:41:59 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/logout[39m
+2026-05-04 18:42:00 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/logout - status: 200 - 221.39ms[39m
