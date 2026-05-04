@@ -1,11 +1,12 @@
 import bcrypt from "bcryptjs";
 import { AuthCredentialsRepository } from "../repository/auth-credentials";
 import { AuthDeviceRepository } from "../repository/auth-device";
-import { AuthUserRepository } from "../repository/auth-user"; 
+import { AuthUserRepository } from "../repository/auth-user";
 import { LoginDTO, RegisterSubAdminDTO } from "../schema/auth-schema";
 import { JobTypes } from "@packages/queue/jobs";
 import { AppQueue } from "@packages/queue/queue";
 import { generateCompanyId } from "@packages/utils/utils";
+import { generateOTP } from '@packages/utils/utils'
 import prisma from "../config/prismaClient";
 import { createError } from "../utils";
 import jwt, { SignOptions } from "jsonwebtoken";
@@ -23,11 +24,11 @@ export class AuthService {
 
     userRepository: AuthUserRepository;
     credentialRepository: AuthCredentialsRepository;
-    deviceRepository: AuthDeviceRepository; 
+    deviceRepository: AuthDeviceRepository;
     constructor() {
         this.userRepository = new AuthUserRepository();
         this.credentialRepository = new AuthCredentialsRepository();
-        this.deviceRepository = new AuthDeviceRepository(); 
+        this.deviceRepository = new AuthDeviceRepository();
     }
 
     // -----------------------------
@@ -235,4 +236,81 @@ export class AuthService {
             data: data.deviceToken
         };
     }
+
+    async forgotPassword(email: string) {
+
+        // 1. Check if user exists
+        const user = await this.credentialRepository.findByEmail(email);
+
+        if (!user) {
+            throw createError("Email not registered", 404);
+        }
+
+        // 2. Generate OTP
+        const otp = generateOTP();
+
+        // 3. Save OTP with expiry (3 minutes)
+        await this.userRepository.updateOtp(user.id, {
+            otp,
+            otpExpireTime: new Date(Date.now() + 3 * 60 * 1000),
+        });
+
+
+        // 4. Send email via BullMQ
+        await AppQueue.add("SEND_EMAIL", {
+            to: email,
+            subject: "Password Reset OTP",
+            html: `
+        <div style="font-family: Arial;">
+          <h2>Password Reset Request</h2>
+          <p>Your OTP is:</p>
+          <h1 style="letter-spacing:6px; color:#333">${otp}</h1>
+          <p>This OTP will expire in <b>3 minutes</b>.</p>
+        </div>
+      `,
+        });
+
+        return {
+            message: "OTP sent successfully to email",
+            data:otp
+        };
+    }
+
+    async verifyOtp(email: string, otp: string) {
+
+        const user = await this.userRepository.findByEmail(email);
+
+        if (!user) {
+            throw createError("User not found", 404);
+        }
+
+        // check otp match
+        if (user.otp !== otp) {
+            throw createError("Invalid OTP", 400);
+        }
+
+        // check expiry (3 min logic already stored)
+        if (!user.otpExpireTime || user.otpExpireTime < new Date()) {
+            throw createError("OTP expired", 400);
+        }
+
+        
+
+        // generate reset token (10 min validity)
+          const refreshToken = jwt.sign(
+            {
+                sub: String(user.id),
+                role: user.userType,
+                type: "refresh"
+            },
+            config.JWT_REFRESH_SECRET,
+            { expiresIn: config.JWT_REFRESH_EXPIRES_IN } as SignOptions
+        );
+
+        return {
+            message: "OTP verified successfully",
+            bearerToken:refreshToken
+        };
+    }
+
 }

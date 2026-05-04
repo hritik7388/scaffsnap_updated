@@ -36,5 +36,24 @@ export class AuthUserRepository {
         where: { authUserId }
     });
 }
- 
+
+    async updateOtp(userId: bigint, data: { otp: string; otpExpireTime: Date }) {
+        return prisma.authUser.update({
+            where: { id: userId },
+            data: {
+                otp: data.otp,
+                otpExpireTime: data.otpExpireTime,
+            }
+        });
+    }
+
+ async clearOtp(userId: bigint) {
+    return prisma.authUser.update({
+        where: { id: userId },
+        data: {
+            otp: null,
+            otpExpireTime: null
+        }
+    });
+}
 }

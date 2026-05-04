@@ -97,3 +97,27 @@
     at next (/home/hritikbhadauria/.local/share/Trash/files/scaffsnap_updated.2/scaffsnap_updated/node_modules/router/lib/route.js:157:13)
     at Route.dispatch (/home/hritikbhadauria/.local/share/Trash/files/scaffsnap_updated.2/scaffsnap_updated/node_modules/router/lib/route.js:117:3)
     at handle (/home/hritikbhadauria/.local/share/Trash/files/scaffsnap_updated.2/scaffsnap_updated/node_modules/router/index.js:435:11)
+2026-05-04 22:56:33 [[31merror[39m] : [31mError querying the database: Server error: `ERROR 28000 (1698): Access denied for user 'root'@'localhost''[39m
+2026-05-04 22:57:49 [[31merror[39m] : [31mError querying the database: Server error: `ERROR 28000 (1698): Access denied for user 'root'@'localhost''[39m
+2026-05-04 22:58:26 [[31merror[39m] : [31mError querying the database: Server error: `ERROR 28000 (1698): Access denied for user 'root'@'localhost''[39m
+2026-05-04 22:58:46 [[31merror[39m] : [31mError querying the database: Server error: `ERROR 28000 (1698): Access denied for user 'root'@'localhost''[39m
+2026-05-04 23:01:17 [[31merror[39m] : [31mDatabase `SCAFFSNAPP_BACKEND` does not exist[39m
+2026-05-04 23:03:30 [[31merror[39m] : [31mDatabase `SCAFFSNAPP_BACKEND` does not exist[39m
+2026-05-04 23:05:16 [[31merror[39m] : [31m[39m
+[31mInvalid `prisma.authCredentials.findUnique()` invocation in[39m
+[31mC:\Users\Hriti\OneDrive\Desktop\scaffsnap_updated\services\auth-services\src\init\default.superAdmin.ts:6:51[39m
+
+[31m  3 import crypto from "node:crypto"; [39m
+[31m  4 [39m
+[31m  5 export const createDefaultSuperAdmin = async (email: string) => {[39m
+[31m→ 6 const existingUser = await prisma.authCredentials.findUnique([39m
+[31mThe table `AuthCredentials` does not exist in the current database.[39m
+2026-05-04 23:06:09 [[31merror[39m] : [31m[39m
+[31mInvalid `prisma.authCredentials.findUnique()` invocation in[39m
+[31mC:\Users\Hriti\OneDrive\Desktop\scaffsnap_updated\services\auth-services\src\init\default.superAdmin.ts:6:51[39m
+
+[31m  3 import crypto from "node:crypto"; [39m
+[31m  4 [39m
+[31m  5 export const createDefaultSuperAdmin = async (email: string) => {[39m
+[31m→ 6 const existingUser = await prisma.authCredentials.findUnique([39m
+[31mThe table `AuthCredentials` does not exist in the current database.[39m

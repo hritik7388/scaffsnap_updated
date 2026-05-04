@@ -23,5 +23,7 @@ router.post(
 );
 
 
+router.post("/forgot-password", controller.forgotPassword.bind(controller));
+
 
 export default router;

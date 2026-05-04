@@ -57,11 +57,33 @@ export class AuthController {
             return res.status(200).json({
                 statusCode: 200,
                 message: result.message,
-                data: result.data
+                 data: this.serialize(result.data)
             });
 
         } catch (error: any) {
             return res.status(error.statusCode || 500).json({
+                message: error.message || "Internal Server Error"
+            });
+        }
+    }
+
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+
+
+
+            const result = await this.authService.forgotPassword(email);
+
+            return res.status(200).json({
+                statusCode: 200,
+                message: result.message,
+                  data: this.serialize(result.data)
+            });
+
+        } catch (error: any) {
+            return res.status(error.statusCode || 500).json({
+                statusCode: error.statusCode || 500,
                 message: error.message || "Internal Server Error"
             });
         }
