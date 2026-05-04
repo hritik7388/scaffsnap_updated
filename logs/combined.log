@@ -498,3 +498,12 @@
 2026-05-04 23:12:13 [[32minfo[39m] : [32mReceived SIGINT. Starting graceful shutdown...[39m
 2026-05-04 23:12:13 [[32minfo[39m] : [32mHTTP server closed[39m
 2026-05-04 23:12:13 [[32minfo[39m] : [32mDatabase connection closed[39m
+2026-05-04 23:12:25 [[32minfo[39m] : [32m🚀 Starting initialization...[39m
+2026-05-04 23:12:25 [[32minfo[39m] : [32m✅ Database connected[39m
+2026-05-04 23:12:25 [[32minfo[39m] : [32m🚀 Server running on port 3001[39m
+2026-05-04 23:12:30 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/forgot-password[39m
+2026-05-04 23:12:31 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/forgot-password - status: 200 - 111.00ms[39m
+2026-05-04 23:12:34 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/forgot-password[39m
+2026-05-04 23:12:34 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/forgot-password - status: 200 - 52.25ms[39m
+2026-05-04 23:12:49 [[34mdebug[39m] : [34m[REQ START] [POST] /api/auth/forgot-password[39m
+2026-05-04 23:12:49 [[32minfo[39m] : [32m[REQ END] [POST] /api/auth/forgot-password - status: 200 - 46.04ms[39m
